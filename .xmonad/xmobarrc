@@ -1,0 +1,63 @@
+-- vim: ft=haskell
+Config { font = "xft:Migu 1M:size=18"
+       , bgColor = "#1c1c1c"
+       , fgColor = "#404040"
+       , position = TopSize C 100 40
+       -- , position = Static { xpos = 37 , ypos = 0, width = 1845, height = 18 }
+       , lowerOnStart = False
+       , overrideRedirect = False
+       , border = BottomBM 0
+       , borderColor = "#4e4e4e"
+       , commands = [ Run Network "wlp2s0" [ "-t"        , "⇩<rx>  ⇧<tx>  "
+                                          , "--Low"    , "40"
+                                          , "--High"   , "200"
+                                          , "-m"       , "4"
+                                          , "--normal" , "#b0bdbd"
+                                          , "--high"   , "#a5d6a7"
+                                          ] 10
+                    , Run DynNetwork      [ "--template" , "<dev>: <tx>kB/s|<rx>kB/s"
+                                          , "--Low"      , "1000"       -- units: kB/s
+                                          , "--High"     , "5000"       -- units: kB/s
+                                          , "--low"      , "darkgreen"
+                                          , "--normal"   , "darkorange"
+                                          , "--high"     , "darkred"
+                                          ] 10
+                    , Run MultiCpu        [ "-t"       , "■ <total0>.<total1>.<total2>.<total3>  "
+                                          , "--Low"    , "40"
+                                          , "--High"   , "85"
+                                          , "-m"       , "2"
+                                          , "--normal" , "#b0bdbd"
+                                          , "--high"   , "#ef9a9a"
+                                          ] 10
+
+                    , Run Memory          [ "-t"       , "□ <usedratio>%  "
+                                          , "--Low"    , "40"
+                                          , "--High"   , "90"
+                                          , "-m"       , "2"
+                                          , "--normal" , "#b0bdbd"
+                                          , "--high"   , "#ef9a9a"
+                                          ] 10
+                    -- battery monitor
+                    , Run Battery        [ "--template" , "Batt: <acstatus>"
+                                          , "--Low"      , "10"        -- units: %
+                                          , "--High"     , "80"        -- units: %
+                                          , "--low"      , "darkred"
+                                          , "--normal"   , "darkorange"
+                                          , "--high"     , "darkgreen"
+
+                                          , "--" -- battery specific options
+                                                 -- discharging status
+                                                 , "-o"	, "<left>% (<timeleft>)"
+                                                 -- AC "on" status
+                                                 , "-O"	, "<fc=#dAA520>Charging</fc>"
+                                                 -- charged status
+                                          , "-i"	, "<fc=#006000>Charged</fc>"
+                                          ] 50
+                    , Run Date "%a %m/%d %H:%M" "date" 10
+                    , Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " %StdinReader% }{ %multicpu%%memory%%eth0%%battery%<fc=#ece391>%date%</fc> "
+       }
+
