@@ -1,1 +1,0 @@
-/home/taiki/.vimrc
